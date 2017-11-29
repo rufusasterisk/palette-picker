@@ -1,18 +1,23 @@
 let displayColors = {
-  1: { hue: 0, saturation: 50, lightness: 50},
-  2: { hue: 60, saturation: 50, lightness: 50},
-  3: { hue: 120, saturation: 50, lightness: 50},
-  4: { hue: 180, saturation: 50, lightness: 50},
-  5: { hue: 240, saturation: 50, lightness: 50},
+  1: { hue: 0, saturation: 100, lightness: 50},
+  2: { hue: 60, saturation: 100, lightness: 50},
+  3: { hue: 120, saturation: 100, lightness: 50},
+  4: { hue: 180, saturation: 100, lightness: 50},
+  5: { hue: 240, saturation: 100, lightness: 50},
 };
+
+const setFontColor = (index) => {
+  if (displayColors[index].lightness < 41) {
+    $(`.color-${index}`).css({'color':'HSL(0,100%,100%)'})
+  } else {
+    $(`.color-${index}`).css({'color':'HSL(0,100%,0%)'})
+  }
+}
+
 const updateColors = () => {
   console.log(displayColors);
   for (let i=1; i<6; i++) {
-    if (displayColors[i].lightness < 25) {
-      $(`.color-${i}`).css({'color':'HSL(0,100%,100%)'})
-    } else {
-      $(`.color-${i}`).css({'color':'HSL(0,100%,0%)'})
-    }
+    setFontColor(i)
     $(`.color-${i}`).css(
       {'background-color': `HSL(
         ${displayColors[i].hue},
@@ -20,14 +25,15 @@ const updateColors = () => {
         ${displayColors[i].lightness}%)`})
   }
 }
+updateColors();
 
 
 const shuffleColors = () => {
   for (let i=1; i<6; i++) {
     const currentColor = pickRandomColor();
     Object.assign(displayColors, {[i]: currentColor})
-    updateColors();
   }
+  updateColors();
 }
 
 const pickRandomColor = () => {
