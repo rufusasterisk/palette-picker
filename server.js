@@ -45,7 +45,6 @@ app.get('/api/v1/projects/:projectID/palettes', (request, response) => {
 });
 
 app.get('/api/v1/palettes', (request, response) => {
-  // return response.status(200).json(app.locals.palettes)
   database('palettes').select()
     .then( palettes => {
       return response.status(200).json(palettes);
@@ -53,15 +52,33 @@ app.get('/api/v1/palettes', (request, response) => {
     .catch( error => {
       return response.status(500).json({ error });
     })
-
 })
 
-
+const checkPostBody = (reqParamArray, bodyObject) => {
+  for (let requiredParameter of reqParamArray) {
+  if (!bodyObject[requiredParameter]){
+    return requiredParameter
+    }
+  }
+}
 
 app.post('/api/v1/projects', (request, response) => {
-  const { name } = request.body;
-  app.locals.projects.push({id: Date.now(), name: name});
-  return response.sendStatus(204);
+  const checkBodyResult = checkPostBody(['name'], request.body);
+  if (checkBodyResult !== undefined) {
+    return response.status(422).json({
+      error: `You are missing the ${checkBodyResult} parameter!`
+    });
+  } else {
+    database('projects').insert(request.body, 'id')
+      .then( project => {
+        return response.status(201).json({
+          id: project[0]
+        });
+      })
+      .catch( error => {
+        return response.status(500).json({ error })
+      })
+  }
 });
 
 app.post('/api/v1/palettes', (request, response) => {
