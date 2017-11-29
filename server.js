@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-app.locals.projects = [];
-app.locals.palettes = [];
+app.locals.projects = [{id: 23451, name: 'my project'}];
+app.locals.palettes = [{id: 24235, color1: 'f00', color2: '00f', color3: '0f0', color4: '000', color5: 'fff', projectID: 23451}];
 app.locals.title = 'Palette Picker';
 
 app.use(bodyParser.json());
@@ -21,14 +21,14 @@ app.get('/api/v1/projects', (request, response) => {
   return response.status(200).json(app.locals.projects);
 });
 
-app.get('/api/v1/palettes', (request, response) => {
+app.get('/api/v1/palettes/:projectID', (request, response) => {
   const { projectID } = request.params;
-  return filterPalettes(projectID);
+  return response.status(200).json(filterPalettes(projectID));
 });
 
 const filterPalettes = (projectID) => {
   return app.locals.palettes.filter( (palette) => {
-    palette.projectID === projectID;
+    return palette.projectID === parseInt(projectID);
   });
 }
 
