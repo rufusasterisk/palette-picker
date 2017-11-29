@@ -32,6 +32,10 @@ const filterPalettes = (projectID) => {
   });
 }
 
+app.get('/api/v1/palettes', (request, response) => {
+  return response.status(200).json(app.locals.palettes)
+})
+
 app.post('/api/v1/projects', (request, response) => {
   const { name } = request.body;
   app.locals.projects.push({id: Date.now(), name: name});
@@ -47,7 +51,6 @@ app.post('/api/v1/palettes', (request, response) => {
     color4,
     color5,
     projectID } = request.body;
-  console.log(name);
 
   app.locals.palettes.push({
     id: Date.now(),
@@ -61,3 +64,12 @@ app.post('/api/v1/palettes', (request, response) => {
   });
   return response.sendStatus(204);
 });
+
+app.delete('/api/v1/palettes/:paletteID', (request, response) => {
+  const { paletteID } = request.params;
+
+  app.locals.palettes = app.locals.palettes.filter( (palette) => {
+    return palette.id !== parseInt(paletteID);
+  })
+  return response.sendStatus(204);
+})
