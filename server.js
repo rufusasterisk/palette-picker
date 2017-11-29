@@ -33,7 +33,7 @@ const filterPalettes = (projectID) => {
 }
 
 app.post('/api/v1/projects', (request, response) => {
-  const { name } = request.params;
+  const { name } = request.body;
   app.locals.projects.push({id: Date.now(), name: name});
   return response.sendStatus(204);
 });
@@ -46,7 +46,8 @@ app.post('/api/v1/palettes', (request, response) => {
     color3,
     color4,
     color5,
-    projectID } = request.params;
+    projectID } = request.body;
+  console.log(name);
 
   app.locals.palettes.push({
     id: Date.now(),
