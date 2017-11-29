@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-app.locals.projects = [{id: 23451, name: 'my project'}];
-app.locals.palettes = [{id: 24235, color1: 'f00', color2: '00f', color3: '0f0', color4: '000', color5: 'fff', projectID: 23451}];
+// app.locals.projects = [{id: 23451, name: 'my project'}];
+// app.locals.palettes = [{id: 24235, color1: 'f00', color2: '00f', color3: '0f0', color4: '000', color5: 'fff', projectID: 23451}];
 app.locals.title = 'Palette Picker';
 
 app.use(bodyParser.json());
@@ -22,23 +22,41 @@ app.listen(app.get('port'), () => {
 })
 
 app.get('/api/v1/projects', (request, response) => {
-  return response.status(200).json(app.locals.projects);
+  database('projects').select()
+    .then( projects => {
+      return response.status(200).json(projects);
+    })
+    .catch( error => {
+      return response.status(500).json({ error });
+    })
 });
 
-app.get('/api/v1/palettes/:projectID', (request, response) => {
-  const { projectID } = request.params;
-  return response.status(200).json(filterPalettes(projectID));
+app.get('/api/v1/projects/:projectID/palettes', (request, response) => {
+  database('palettes').where('project_key', request.params.projectID).select()
+    .then( palettes => {
+      if (palettes.length) {
+        return response.status(200).json(palettes);
+      } else {
+        return response.status(404).json({
+          error: `Did not find that project or found no palettes`
+        });
+      }
+    })
 });
-
-const filterPalettes = (projectID) => {
-  return app.locals.palettes.filter( (palette) => {
-    return palette.projectID === parseInt(projectID);
-  });
-}
 
 app.get('/api/v1/palettes', (request, response) => {
-  return response.status(200).json(app.locals.palettes)
+  // return response.status(200).json(app.locals.palettes)
+  database('palettes').select()
+    .then( palettes => {
+      return response.status(200).json(palettes);
+    })
+    .catch( error => {
+      return response.status(500).json({ error });
+    })
+
 })
+
+
 
 app.post('/api/v1/projects', (request, response) => {
   const { name } = request.body;
