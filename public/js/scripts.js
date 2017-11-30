@@ -30,37 +30,37 @@ const updateColors = () => {
 updateColors();
 
 
-const tetraColors = () => {
-  const starterColor = pickRandomColor();
-  const firstTetra = Object.assign({}, pickRandomColor(), { hue: ( starterColor.hue + 180 )%360 });
-  const secondTetra = Object.assign({}, pickRandomColor(), { hue: ( starterColor.hue + 60 )%360 });
-  const thirdTetra = Object.assign({}, pickRandomColor(), { hue: ( starterColor.hue + 240 )%360 });
-  const fifthRando = pickRandomColor();
+// const tetraColors = () => {
+//   const starterColor = pickRandomColor();
+//   const firstTetra = Object.assign({}, pickRandomColor(), { hue: ( starterColor.hue + 180 )%360 });
+//   const secondTetra = Object.assign({}, pickRandomColor(), { hue: ( starterColor.hue + 60 )%360 });
+//   const thirdTetra = Object.assign({}, pickRandomColor(), { hue: ( starterColor.hue + 240 )%360 });
+//   const fifthRando = pickRandomColor();
+//
+//   displayColors = {
+//     1: starterColor,
+//     2: firstTetra,
+//     3: secondTetra,
+//     4: thirdTetra,
+//     5: fifthRando
+//   }
+//   updateColors()
+// }
 
-  displayColors = {
-    1: starterColor,
-    2: firstTetra,
-    3: secondTetra,
-    4: thirdTetra,
-    5: fifthRando
-  }
-  updateColors()
-}
+// const shuffleColors = () => {
+//   for (let i=1; i<6; i++) {
+//     const currentColor = pickRandomColor();
+//     Object.assign(displayColors, {[i]: currentColor})
+//   }
+//   updateColors();
+// }
 
-const shuffleColors = () => {
-  for (let i=1; i<6; i++) {
-    const currentColor = pickRandomColor();
-    Object.assign(displayColors, {[i]: currentColor})
-  }
-  updateColors();
-}
-
-const pickRandomColor = () => {
-  const hue = Math.floor(Math.random()*359);
-  const saturation = Math.floor(Math.random()*100);
-  const lightness = Math.floor(Math.random()*80)+10;
-  return ({ hue: hue, saturation: saturation, lightness: lightness})
-}
+// const pickRandomColor = () => {
+//   const hue = Math.floor(Math.random()*359);
+//   const saturation = Math.floor(Math.random()*100);
+//   const lightness = Math.floor(Math.random()*80)+10;
+//   return ({ hue: hue, saturation: saturation, lightness: lightness})
+// }
 
 const buildPostPayload = (bodyObject) => ({
   body: JSON.stringify(bodyObject),
