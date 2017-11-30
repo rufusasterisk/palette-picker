@@ -98,12 +98,17 @@ const addProject = () => {
 
 const loadSelectedPalette = () => {
   const currentPalette = $('.palette-dropdown').val();
-  console.log(currentPalette);
-  fetch('/api/v1/palettes/' + currentPalette)
+  if(currentPalette !== 'null') {
+    fetch('/api/v1/palettes/' + currentPalette)
     .then( response => response.json())
     .then( palette => {
-
+      $('.color-1').css('background-color', `#${palette[0].color1}`);
+      $('.color-2').css('background-color', `#${palette[0].color2}`)
+      $('.color-3').css('background-color', `#${palette[0].color3}`)
+      $('.color-4').css('background-color', `#${palette[0].color4}`)
+      $('.color-5').css('background-color', `#${palette[0].color5}`)
     })
+  }
 }
 
 
@@ -114,7 +119,9 @@ const selectProject = () => {
       .then( response => response.json())
       .then( paletteArray => {
         if (paletteArray.length){
-          $('.palette-dropdown').html('');
+          $('.palette-dropdown').html(`
+            <option value="null">No Palette Selected</option>
+            `);
           paletteArray.forEach( (palette) => {
             $('.palette-dropdown').append(`
               <option value="${palette.id}">${palette.name}</option>
@@ -125,12 +132,15 @@ const selectProject = () => {
             <option value="null">No Palette Selected</option>
           `)
         }
+        loadSelectedPalette();
       })
       .catch( error => {
         console.log({ error });
       })
   }
 }
+
+
 
 loadCurrentProjects();
 
@@ -139,3 +149,5 @@ $('#shuffle-btn').on('click', tetraColors);
 $('.add-project-btn').on('click', addProject);
 
 $('.project-dropdown').on('change', selectProject);
+
+$('.palette-dropdown').on('change', loadSelectedPalette);
