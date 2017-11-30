@@ -6,6 +6,8 @@ let displayColors = {
   5: { hue: 240, saturation: 100, lightness: 50},
 };
 
+const hostPort = 3002;
+
 const setFontColor = (index) => {
   if (displayColors[index].lightness < 41) {
     $(`.color-${index}`).css({'color':'HSL(0,100%,100%)'})
@@ -60,4 +62,26 @@ const pickRandomColor = () => {
   return ({ hue: hue, saturation: saturation, lightness: lightness})
 }
 
+const buildPostPayload = (bodyObject) => ({
+  body: JSON.stringify(bodyObject),
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  method: 'POST'
+})
+
+const addProject = () => {
+  console.log('adding project!');
+  const projectName = $('.add-project-input').val();
+  const payload = buildPostPayload({ name: projectName })
+  console.log('payload build:');
+  console.log(payload);
+  fetch('http://localhost:' + hostPort + '/api/v1/projects', payload)
+    .then( response => {
+      console.log(response.json());
+    })
+}
+
 $('#shuffle-btn').on('click', tetraColors);
+
+$('.add-project-btn').on('click', addProject);
