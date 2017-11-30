@@ -71,7 +71,7 @@ const buildPostPayload = (bodyObject) => ({
 })
 
 const loadCurrentProjects = () => {
-  fetch('http://localhost:' + hostPort + '/api/v1/projects')
+  fetch('/api/v1/projects')
     .then( response => response.json())
     .then( projectArray => {
       if (projectArray.length) {
@@ -89,7 +89,7 @@ const loadCurrentProjects = () => {
 const addProject = () => {
   const projectName = $('.add-project-input').val();
   const payload = buildPostPayload({ name: projectName })
-  fetch('http://localhost:' + hostPort + '/api/v1/projects', payload)
+  fetch('/api/v1/projects', payload)
     .then( response => response.json())
     .then( data => {
       console.log(data);
@@ -99,10 +99,10 @@ const addProject = () => {
 const loadSelectedPalette = () => {
   const currentPalette = $('.palette-dropdown').val();
   console.log(currentPalette);
-  fetch('http://localhost:' + hostPort + '/api/v1/palettes/' + currentPalette)
+  fetch('/api/v1/palettes/' + currentPalette)
     .then( response => response.json())
     .then( palette => {
-      console.log(palette);
+
     })
 }
 
@@ -110,7 +110,7 @@ const loadSelectedPalette = () => {
 const selectProject = () => {
   const currentProject = $('.project-dropdown').val()
   if(currentProject !== null) {
-    fetch('http://localhost:' + hostPort + '/api/v1/projects/' + currentProject + '/palettes')
+    fetch('/api/v1/projects/' + currentProject + '/palettes')
       .then( response => response.json())
       .then( paletteArray => {
         if (paletteArray.length){
