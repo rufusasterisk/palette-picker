@@ -57,7 +57,9 @@ app.get('/api/v1/palettes', (request, response) => {
 const checkPostBody = (reqParamArray, bodyObject) => {
   for (let requiredParameter of reqParamArray) {
   if (!bodyObject[requiredParameter]){
-    return requiredParameter
+    return {
+      error: `You are missing the ${requiredParameter} parameter!`
+    }
     }
   }
 }
@@ -65,9 +67,7 @@ const checkPostBody = (reqParamArray, bodyObject) => {
 app.post('/api/v1/projects', (request, response) => {
   const checkBodyResult = checkPostBody(['name'], request.body);
   if (checkBodyResult !== undefined) {
-    return response.status(422).json({
-      error: `You are missing the ${checkBodyResult} parameter!`
-    });
+    return response.status(422).json(checkBodyResult);
   } else {
     database('projects').insert(request.body, 'id')
       .then( project => {
@@ -81,27 +81,24 @@ app.post('/api/v1/projects', (request, response) => {
   }
 });
 
-app.post('/api/v1/palettes', (request, response) => {
-  const {
-    name,
-    color1,
-    color2,
-    color3,
-    color4,
-    color5,
-    projectID } = request.body;
-
-  app.locals.palettes.push({
-    id: Date.now(),
-    name: name,
-    color1: color1,
-    color2: color2,
-    color3: color3,
-    color4: color4,
-    color5: color5,
-    projectID: projectID
-  });
-  return response.sendStatus(204);
+app.post('/api/v1/projects/:projectKey/palettes', (request, response) => {
+  const reqParams = ['name','color1','color2','color3','color4','color5']
+  const checkBodyResult = checkPostBody(reqParams, request.body);
+  if (checkBodyResult !== undefined) {
+    return response.status(422).json(checkBodyResult);
+  } else {
+    const newPalette = Object.assign(
+      request.body, {project_key: request.params.projectKey})
+    database('palettes').insert(newPalette, 'id')
+      .then( palette => {
+        return response.status(201).json({
+          id: palette[0]
+        })
+      })
+      .catch( error => {
+        return response.status(500).json({ error })
+      })
+  }
 });
 
 app.delete('/api/v1/palettes/:paletteID', (request, response) => {
