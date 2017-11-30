@@ -74,9 +74,9 @@ const loadCurrentProjects = () => {
   fetch('http://localhost:' + hostPort + '/api/v1/projects')
     .then( response => response.json())
     .then( projectArray => {
-      console.log(projectArray);
       if (projectArray.length) {
-        $('.project-dropdown').html('')
+        $('.project-dropdown').html(`
+        <option value="null">No Project Selected</option>`);
         projectArray.forEach( (project) => {
           $('.project-dropdown').prepend(`
             <option value="${project.id}">${project.name}</option>
@@ -95,6 +95,27 @@ const addProject = () => {
       console.log(data);
     })
 }
+
+const selectProject = () => {
+  const currentProject = $('.project-dropdown').val()
+  console.log(currentProject);
+  if(currentProject !== null) {
+    fetch('http://localhost:' + hostPort + '/api/v1/projects/' + currentProject + '/palettes')
+      .then( response => response.json())
+      .then( paletteArray => {
+        if (paletteArray.length){
+          $('.palette-dropdown').html('');
+          paletteArray.forEach( (palette) => {
+            $('.palette-dropdown').prepend(`
+              <option value="${palette.id}">${palette.name}</option>
+            `)
+          })
+        }
+      })
+  }
+}
+
+loadCurrentProjects();
 
 $('#shuffle-btn').on('click', tetraColors);
 
