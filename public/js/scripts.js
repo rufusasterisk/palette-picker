@@ -93,6 +93,7 @@ const addProject = () => {
     .then( response => response.json())
     .then( data => {
       console.log(data);
+      loadCurrentProjects();
     })
 }
 
@@ -140,14 +141,28 @@ const selectProject = () => {
   }
 }
 
+const addPalette = () => {
+  const color1 = parseRGB($('.color-1').css('background-color'));
+  const color2 = parseRGB($('.color-2').css('background-color'));
+  const color3 = parseRGB($('.color-3').css('background-color'));
+  const color4 = parseRGB($('.color-4').css('background-color'));
+  const color5 = parseRGB($('.color-5').css('background-color'));
+  console.log(color1, color2, color3, color4, color5);
+}
 
+const shuffleColors = () => {
+  displayColors = tetraColors();
+  updateColors();
+}
 
 loadCurrentProjects();
 
-$('#shuffle-btn').on('click', tetraColors);
+$('#shuffle-btn').on('click', shuffleColors);
 
 $('.add-project-btn').on('click', addProject);
 
 $('.project-dropdown').on('change', selectProject);
 
 $('.palette-dropdown').on('change', loadSelectedPalette);
+
+$('.submit-palette').on('click', addPalette);

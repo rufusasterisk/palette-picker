@@ -5,7 +5,7 @@ const pickRandomColor = () => {
   return ({ hue: hue, saturation: saturation, lightness: lightness})
 }
 
-const shuffleColors = () => {
+const randomColors = () => {
   let randomColorPalette = {}
   for (let i=1; i<6; i++) {
     const currentColor = pickRandomColor();
@@ -118,10 +118,21 @@ const convertHSLtoHex = (HSLColorObject) => {
  return (convertToHex(finalR)+convertToHex(finalG)+convertToHex(finalB))
 }
 
+const parseRGB = (rgbString) => {
+  rgbString = rgbString.replace(/^.*\(/, '');
+  rgbString = rgbString.replace(')','');
+  let rgbArray = JSON.parse("[" + rgbString + "]");
+  let hexColor = rgbArray.reduce( (acc, number) => {
+    acc = acc + convertToHex(number);
+    return acc;
+  }, '');
+  return hexColor;
+}
+
 const convertToHex = (decValue) => {
   let value = decValue.toString(16);
-  if (value === '0' ) {
-    value = '00';
+  if (value.length === 1 ) {
+    value = '0' + value;
   }
   return value;
 }
