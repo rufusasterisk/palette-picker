@@ -53,6 +53,16 @@ app.get('/api/v1/palettes', (request, response) => {
     });
 });
 
+app.get('/api/v1/palettes/:id', (request, response) => {
+  database('palettes').where('id', request.params.id).select()
+    .then( palette => {
+      return response.status(200).json(palette);
+    })
+    .catch( error => {
+      return response.status(500).json({ error });
+    })
+});
+
 const checkPostBody = (reqParamArray, bodyObject) => {
   for (let requiredParameter of reqParamArray) {
     if (!bodyObject[requiredParameter]){
