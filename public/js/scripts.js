@@ -141,13 +141,41 @@ const selectProject = () => {
   }
 }
 
+
 const addPalette = () => {
+  const name = $('.new-palette').val();
   const color1 = parseRGB($('.color-1').css('background-color'));
   const color2 = parseRGB($('.color-2').css('background-color'));
   const color3 = parseRGB($('.color-3').css('background-color'));
   const color4 = parseRGB($('.color-4').css('background-color'));
   const color5 = parseRGB($('.color-5').css('background-color'));
-  console.log(color1, color2, color3, color4, color5);
+  const projectID = $('.project-dropdown').val();
+  if (projectID === 'null') {
+    alert('You must select a project!');
+    return;
+  }
+  if (name === '') {
+    alert('You must enter a palette name!');
+    return;
+  }
+  const myPayload = {
+    name: name,
+    color1: color1,
+    color2: color2,
+    color3: color3,
+    color4: color4,
+    color5: color5,
+  }
+  fetch('/api/v1/projects/' + projectID + '/palettes',
+    buildPostPayload(myPayload)
+  )
+    .then(response => response.json())
+    .then( data => {
+      selectProject();
+    })
+    .catch( error => {
+      console.log({ error });
+    })
 }
 
 const shuffleColors = () => {
