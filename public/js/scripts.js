@@ -70,18 +70,34 @@ const buildPostPayload = (bodyObject) => ({
   method: 'POST'
 })
 
+const loadCurrentProjects = () => {
+  fetch('http://localhost:' + hostPort + '/api/v1/projects')
+    .then( response => response.json())
+    .then( projectArray => {
+      console.log(projectArray);
+      if (projectArray.length) {
+        $('.project-dropdown').html('')
+        projectArray.forEach( (project) => {
+          $('.project-dropdown').prepend(`
+            <option value="${project.id}">${project.name}</option>
+            `);
+          })
+      }
+    })
+}
+
 const addProject = () => {
-  console.log('adding project!');
   const projectName = $('.add-project-input').val();
   const payload = buildPostPayload({ name: projectName })
-  console.log('payload build:');
-  console.log(payload);
   fetch('http://localhost:' + hostPort + '/api/v1/projects', payload)
-    .then( response => {
-      console.log(response.json());
+    .then( response => response.json())
+    .then( data => {
+      console.log(data);
     })
 }
 
 $('#shuffle-btn').on('click', tetraColors);
 
 $('.add-project-btn').on('click', addProject);
+
+$('.project-dropdown').on('change', selectProject);
