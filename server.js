@@ -102,10 +102,17 @@ app.post('/api/v1/projects/:projectKey/palettes', (request, response) => {
 });
 
 app.delete('/api/v1/palettes/:paletteID', (request, response) => {
-  const { paletteID } = request.params;
-
-  app.locals.palettes = app.locals.palettes.filter( (palette) => {
-    return palette.id !== parseInt(paletteID);
-  })
-  return response.sendStatus(204);
+  database('palettes').where('id', request.params.paletteID).del()
+    .then( () => {
+      return response.sendStatus(204);
+    })
+    .catch( error => {
+      return response.status(500).json({ error });
+    })
+  // const { paletteID } = request.params;
+  //
+  // app.locals.palettes = app.locals.palettes.filter( (palette) => {
+  //   return palette.id !== parseInt(paletteID);
+  // })
+  // return response.sendStatus(204);
 })
