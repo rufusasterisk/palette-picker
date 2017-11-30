@@ -2,8 +2,6 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-// app.locals.projects = [{id: 23451, name: 'my project'}];
-// app.locals.palettes = [{id: 24235, color1: 'f00', color2: '00f', color3: '0f0', color4: '000', color5: 'fff', projectID: 23451}];
 app.locals.title = 'Palette Picker';
 
 app.use(bodyParser.json());
@@ -19,7 +17,7 @@ app.set('port', process.env.PORT || 3002);
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on port ${app.get('port')}.`);
-})
+});
 
 app.get('/api/v1/projects', (request, response) => {
   database('projects').select()
@@ -41,7 +39,7 @@ app.get('/api/v1/projects/:projectID/palettes', (request, response) => {
           error: `Did not find that project or found no palettes`
         });
       }
-    })
+    });
 });
 
 app.get('/api/v1/palettes', (request, response) => {
@@ -51,22 +49,23 @@ app.get('/api/v1/palettes', (request, response) => {
     })
     .catch( error => {
       return response.status(500).json({ error });
-    })
-})
+    });
+});
 
 const checkPostBody = (reqParamArray, bodyObject) => {
   for (let requiredParameter of reqParamArray) {
-  if (!bodyObject[requiredParameter]){
-    return {
-      error: `You are missing the ${requiredParameter} parameter!`
-    }
+    if (!bodyObject[requiredParameter]){
+      return {
+        error: `You are missing the ${requiredParameter} parameter!`
+      };
     }
   }
+  return 'ok';
 }
 
 app.post('/api/v1/projects', (request, response) => {
   const checkBodyResult = checkPostBody(['name'], request.body);
-  if (checkBodyResult !== undefined) {
+  if (checkBodyResult !== 'ok') {
     return response.status(422).json(checkBodyResult);
   } else {
     database('projects').insert(request.body, 'id')
@@ -77,26 +76,26 @@ app.post('/api/v1/projects', (request, response) => {
       })
       .catch( error => {
         return response.status(500).json({ error })
-      })
+      });
   }
 });
 
 app.post('/api/v1/projects/:projectKey/palettes', (request, response) => {
-  const reqParams = ['name','color1','color2','color3','color4','color5']
+  const reqParams = ['name','color1','color2','color3','color4','color5'];
   const checkBodyResult = checkPostBody(reqParams, request.body);
-  if (checkBodyResult !== undefined) {
+  if (checkBodyResult !== 'ok') {
     return response.status(422).json(checkBodyResult);
   } else {
-    const newPalette = Object.assign(
-      request.body, {project_key: request.params.projectKey})
+    const newPalette = Object.assign({},
+      request.body, {project_key: request.params.projectKey});
     database('palettes').insert(newPalette, 'id')
       .then( palette => {
         return response.status(201).json({
           id: palette[0]
-        })
+        });
       })
       .catch( error => {
-        return response.status(500).json({ error })
+        return response.status(500).json({ error });
       })
   }
 });
@@ -108,20 +107,18 @@ app.delete('/api/v1/palettes/:paletteID', (request, response) => {
     })
     .catch( error => {
       return response.status(500).json({ error });
-    })
-})
+    });
+});
 
 app.delete('/api/v1/projects/:projectID', (request, response) => {
-  console.log('deleting palette');
   database('palettes').where('project_key', request.params.projectID).del()
   .then( () => {
-    console.log('deleting project');
     database('projects').where('id', request.params.projectID).del()
     .then( () => {
       return response.sendStatus(204);
-    })
+    });
   })
   .catch( error => {
     return response.status(500).json({ error });
-  })
-})
+  });
+});
