@@ -32,13 +32,14 @@ app.get('/api/v1/projects', (request, response) => {
 app.get('/api/v1/projects/:projectID/palettes', (request, response) => {
   database('palettes').where('project_key', request.params.projectID).select()
     .then( palettes => {
-      if (palettes.length) {
         return response.status(200).json(palettes);
-      } else {
-        return response.status(404).json({
-          error: `Did not find that project or found no palettes`
-        });
-      }
+      // if (palettes.length) {
+      //   return response.status(200).json(palettes);
+      // } else {
+      //   return response.status(404).json({
+      //     error: `Did not find that project or found no palettes`
+      //   });
+      // }
     });
 });
 

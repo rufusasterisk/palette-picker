@@ -98,7 +98,6 @@ const addProject = () => {
 
 const selectProject = () => {
   const currentProject = $('.project-dropdown').val()
-  console.log(currentProject);
   if(currentProject !== null) {
     fetch('http://localhost:' + hostPort + '/api/v1/projects/' + currentProject + '/palettes')
       .then( response => response.json())
@@ -106,11 +105,19 @@ const selectProject = () => {
         if (paletteArray.length){
           $('.palette-dropdown').html('');
           paletteArray.forEach( (palette) => {
-            $('.palette-dropdown').prepend(`
+            $('.palette-dropdown').append(`
               <option value="${palette.id}">${palette.name}</option>
             `)
           })
+        } else {
+          $('.palette-dropdown').html(`
+            <option value="null">No Palette Selected</option>
+          `)
         }
+      })
+      .catch( error => {
+        console.log('heyo');
+        console.log({ error });
       })
   }
 }
