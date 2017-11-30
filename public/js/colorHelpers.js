@@ -32,14 +32,9 @@ const tetraColors = () => {
 }
 
 const convertHextoHSL = (hexString) => {
-  //RGBColorObject = {r: value, g: value, b: value}
-  // const tempR = RGBColorObject.r / 255;
-  // const tempG = RGBColorObject.g / 255;
-  // const tempB = RGBColorObject.b / 255;
   const tempR = convertToDec(hexString.substr(0,2)) / 255;
   const tempG = convertToDec(hexString.substr(2,2)) / 255;
   const tempB = convertToDec(hexString.substr(4,2)) / 255;
-  console.log(tempR, tempG, tempB);
   const min = Math.min(tempR, tempG, tempB);
   const max = Math.max(tempR, tempG, tempB);
 
@@ -120,9 +115,7 @@ const convertHSLtoHex = (HSLColorObject) => {
  const finalR = Math.round(colorTests(tempR, temp1, temp2)*255);
  const finalG = Math.round(colorTests(tempG, temp1, temp2)*255);
  const finalB = Math.round(colorTests(tempB, temp1, temp2)*255);
- // console.log(convertToHex(finalR)+convertToHex(finalG)+convertToHex(finalB));
  return (convertToHex(finalR)+convertToHex(finalG)+convertToHex(finalB))
- // return ({ r: finalR, g: finalG, b: finalB })
 }
 
 const convertToHex = (decValue) => {
