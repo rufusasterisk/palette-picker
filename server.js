@@ -26,7 +26,7 @@ app.get('/api/v1/projects', (request, response) => {
     })
     .catch( error => {
       return response.status(500).json({ error });
-    })
+    });
 });
 
 app.get('/api/v1/projects/:projectID/palettes', (request, response) => {
