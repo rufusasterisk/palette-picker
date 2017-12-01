@@ -20,12 +20,12 @@ exports.up = function(knex, Promise) {
 
       table.timestamps(true, true);
     })
-  ])
+  ]);
 };
 
 exports.down = function(knex, Promise) {
   return Promise.all([
     knex.schema.dropTable('palettes'),
     knex.schema.dropTable('projects')
-  ])
+  ]);
 };

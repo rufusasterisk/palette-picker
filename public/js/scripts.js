@@ -1,3 +1,4 @@
+
 let displayColors = {
   1: { hue: 0, saturation: 100, lightness: 50},
   2: { hue: 60, saturation: 100, lightness: 50},
@@ -10,57 +11,24 @@ const hostPort = 3002;
 
 const setFontColor = (index) => {
   if (displayColors[index].lightness < 41) {
-    $(`.color-${index}`).css({'color':'HSL(0,100%,100%)'})
+    $(`.color-${index}`).css({'color':'HSL(0,100%,100%)'});
   } else {
-    $(`.color-${index}`).css({'color':'HSL(0,100%,0%)'})
+    $(`.color-${index}`).css({'color':'HSL(0,100%,0%)'});
   }
-}
+};
 
 const updateColors = () => {
   console.log(displayColors);
   for (let i=1; i<6; i++) {
-    setFontColor(i)
+    setFontColor(i);
     $(`.color-${i}`).css(
       {'background-color': `HSL(
         ${displayColors[i].hue},
         ${displayColors[i].saturation}%,
-        ${displayColors[i].lightness}%)`})
+        ${displayColors[i].lightness}%)`});
   }
-}
+};
 updateColors();
-
-
-// const tetraColors = () => {
-//   const starterColor = pickRandomColor();
-//   const firstTetra = Object.assign({}, pickRandomColor(), { hue: ( starterColor.hue + 180 )%360 });
-//   const secondTetra = Object.assign({}, pickRandomColor(), { hue: ( starterColor.hue + 60 )%360 });
-//   const thirdTetra = Object.assign({}, pickRandomColor(), { hue: ( starterColor.hue + 240 )%360 });
-//   const fifthRando = pickRandomColor();
-//
-//   displayColors = {
-//     1: starterColor,
-//     2: firstTetra,
-//     3: secondTetra,
-//     4: thirdTetra,
-//     5: fifthRando
-//   }
-//   updateColors()
-// }
-
-// const shuffleColors = () => {
-//   for (let i=1; i<6; i++) {
-//     const currentColor = pickRandomColor();
-//     Object.assign(displayColors, {[i]: currentColor})
-//   }
-//   updateColors();
-// }
-
-// const pickRandomColor = () => {
-//   const hue = Math.floor(Math.random()*359);
-//   const saturation = Math.floor(Math.random()*100);
-//   const lightness = Math.floor(Math.random()*80)+10;
-//   return ({ hue: hue, saturation: saturation, lightness: lightness})
-// }
 
 const buildPostPayload = (bodyObject) => ({
   body: JSON.stringify(bodyObject),
@@ -68,7 +36,7 @@ const buildPostPayload = (bodyObject) => ({
     'Content-Type': 'application/json'
   },
   method: 'POST'
-})
+});
 
 const loadCurrentProjects = () => {
   fetch('/api/v1/projects')
@@ -81,21 +49,21 @@ const loadCurrentProjects = () => {
           $('.project-dropdown').prepend(`
             <option value="${project.id}">${project.name}</option>
             `);
-          })
+        });
       }
-    })
-}
+    });
+};
 
 const addProject = () => {
   const projectName = $('.add-project-input').val();
-  const payload = buildPostPayload({ name: projectName })
-  fetch('/api/v1/projects', payload)
+  const projectPayload = buildPostPayload({ name: projectName });
+  fetch('/api/v1/projects', projectPayload)
     .then( response => response.json())
-    .then( data => {
-      console.log(data);
+    .then( () => {
+      // console.log(id);
       loadCurrentProjects();
-    })
-}
+    });
+};
 
 const loadSelectedPalette = () => {
   let target = $( event.target );
@@ -103,17 +71,16 @@ const loadSelectedPalette = () => {
     target = $( event.target.parentElement );
   }
   const currentPalette = target.attr('class').substr(11);
-    fetch('/api/v1/palettes/' + currentPalette)
+  fetch('/api/v1/palettes/' + currentPalette)
     .then( response => response.json())
     .then( palette => {
       $('.color-1').css('background-color', `#${palette[0].color1}`);
-      $('.color-2').css('background-color', `#${palette[0].color2}`)
-      $('.color-3').css('background-color', `#${palette[0].color3}`)
-      $('.color-4').css('background-color', `#${palette[0].color4}`)
-      $('.color-5').css('background-color', `#${palette[0].color5}`)
-    })
-  // }
-}
+      $('.color-2').css('background-color', `#${palette[0].color2}`);
+      $('.color-3').css('background-color', `#${palette[0].color3}`);
+      $('.color-4').css('background-color', `#${palette[0].color4}`);
+      $('.color-5').css('background-color', `#${palette[0].color5}`);
+    });
+};
 
 const displayPalettes = (paletteArray) => {
   $('.palette-list').html('');
@@ -126,24 +93,24 @@ const displayPalettes = (paletteArray) => {
         <div style="background-color:#${palette.color3}"></div>
         <div style="background-color:#${palette.color4}"></div>
         <div style="background-color:#${palette.color5}"></div>
-    `)
+    `);
   });
-}
+};
 
 
 const selectProject = () => {
-  const currentProject = $('.project-dropdown').val()
-  if(currentProject !== null) {
+  const currentProject = $('.project-dropdown').val();
+  if (currentProject !== null) {
     fetch('/api/v1/projects/' + currentProject + '/palettes')
       .then( response => response.json())
       .then( paletteArray => {
         displayPalettes(paletteArray);
       })
       .catch( error => {
-        console.log({ error });
-      })
+        alert({ error });
+      });
   }
-}
+};
 
 
 const addPalette = () => {
@@ -169,23 +136,23 @@ const addPalette = () => {
     color3: color3,
     color4: color4,
     color5: color5,
-  }
+  };
   fetch('/api/v1/projects/' + projectID + '/palettes',
     buildPostPayload(myPayload)
   )
     .then(response => response.json())
-    .then( data => {
+    .then( () => {
       selectProject();
     })
     .catch( error => {
-      console.log({ error });
-    })
-}
+      alert({ error });
+    });
+};
 
 const shuffleColors = () => {
   displayColors = tetraColors();
   updateColors();
-}
+};
 
 loadCurrentProjects();
 
