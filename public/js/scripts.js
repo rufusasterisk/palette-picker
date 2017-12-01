@@ -1,4 +1,3 @@
-
 let displayColors = {
   1: { hue: 0, saturation: 100, lightness: 50},
   2: { hue: 60, saturation: 100, lightness: 50},
@@ -17,10 +16,14 @@ const setFontColor = (index) => {
   }
 };
 
+const updateColorText = (index) => {
+  $(`.color-${index} h4`).text(`#${convertHSLtoHex(displayColors[index])}`);
+};
+
 const updateColors = () => {
-  console.log(displayColors);
+  // console.log(displayColors);
   for (let i=1; i<6; i++) {
-    setFontColor(i);
+    updateColorText(i);
     $(`.color-${i}`).css(
       {'background-color': `HSL(
         ${displayColors[i].hue},
@@ -60,7 +63,6 @@ const addProject = () => {
   fetch('/api/v1/projects', projectPayload)
     .then( response => response.json())
     .then( () => {
-      // console.log(id);
       loadCurrentProjects();
     });
 };
@@ -77,11 +79,14 @@ const loadSelectedPalette = () => {
   fetch('/api/v1/palettes/' + currentPalette)
     .then( response => response.json())
     .then( palette => {
-      $('.color-1').css('background-color', `#${palette[0].color1}`);
-      $('.color-2').css('background-color', `#${palette[0].color2}`);
-      $('.color-3').css('background-color', `#${palette[0].color3}`);
-      $('.color-4').css('background-color', `#${palette[0].color4}`);
-      $('.color-5').css('background-color', `#${palette[0].color5}`);
+      for ( let i = 1; i < 6; i++) {
+        const currentColorString = 'color' + i;
+        $(`.color-${i}`)
+          .css('background-color', `#${palette[0][currentColorString]}`);
+        $(`.color-${i} h4`)
+          .text(`#${palette[0][currentColorString]}`);
+
+      }
     });
 };
 
@@ -110,7 +115,8 @@ const selectProject = () => {
         displayPalettes(paletteArray);
       })
       .catch( error => {
-        alert({ error });
+        // eslint-disable-next-line no-console
+        console.log({ error });
       });
   }
 };
@@ -147,7 +153,8 @@ const addPalette = () => {
       selectProject();
     })
     .catch( error => {
-      alert({ error });
+      // eslint-disable-next-line no-console
+      console.log({ error });
     });
 };
 
