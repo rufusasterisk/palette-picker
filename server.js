@@ -34,13 +34,6 @@ app.get('/api/v1/projects/:projectID/palettes', (request, response) => {
   database('palettes').where('project_key', request.params.projectID).select()
     .then( palettes => {
       return response.status(200).json(palettes);
-      // if (palettes.length) {
-      //   return response.status(200).json(palettes);
-      // } else {
-      //   return response.status(404).json({
-      //     error: `Did not find that project or found no palettes`
-      //   });
-      // }
     });
 });
 
@@ -134,3 +127,5 @@ app.delete('/api/v1/projects/:projectID', (request, response) => {
       return response.status(500).json({ error });
     });
 });
+
+module.exports = app;
