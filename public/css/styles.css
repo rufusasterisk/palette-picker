@@ -39,3 +39,9 @@ body {
 .color-5 {
   background-color: #ff0;
 }
+
+dd div {
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}

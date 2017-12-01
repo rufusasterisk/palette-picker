@@ -17,27 +17,36 @@
       <div class="color-box color-4">Color 4</div>
       <div class="color-box color-5">Color 5</div>
     </section>
-    <section id="project-menu">
-      <select class="project-dropdown">
-        <option value="null">No Project Selected</option>
-      </select>
-      <input
+    <section id="side-menu">
+      <article class="project-forms">
+        <select class="project-dropdown">
+          <option value="null">No Project Selected</option>
+        </select>
+        <input
         class="add-project-input"
         type="text"
         name="new-project"
         placeholder="Enter new project name" />
-      <button
+        <button
         type="button"
         name="submit-new-project"
         class="add-project-btn">Add Project</button>
+      </article>
+      <article class="palette-display">
+        <dl class="palette-list">
+        </dl>
+      </article>
       <select class="palette-dropdown">
         <option value="null">No Palette Selected</option>
       </select>
       <input
         type="text"
-        name="new-palette"
+        class="new-palette"
         placeholder="Enter a new Palette name" />
-      <button type="button" name="submit-new-palette">Add Palette</button>
+      <button
+      type="button"
+      name="submit-new-palette"
+      class='submit-palette'>Add Palette</button>
     </section>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/colorHelpers.js"></script>

@@ -16,6 +16,7 @@ app.use(express.static(__dirname + '/public'));
 app.set('port', process.env.PORT || 3002);
 
 app.listen(app.get('port'), () => {
+  // eslint-disable-next-line no-console
   console.log(`${app.locals.title} is running on port ${app.get('port')}.`);
 });
 
@@ -26,13 +27,13 @@ app.get('/api/v1/projects', (request, response) => {
     })
     .catch( error => {
       return response.status(500).json({ error });
-    })
+    });
 });
 
 app.get('/api/v1/projects/:projectID/palettes', (request, response) => {
   database('palettes').where('project_key', request.params.projectID).select()
     .then( palettes => {
-        return response.status(200).json(palettes);
+      return response.status(200).json(palettes);
       // if (palettes.length) {
       //   return response.status(200).json(palettes);
       // } else {
@@ -60,7 +61,7 @@ app.get('/api/v1/palettes/:id', (request, response) => {
     })
     .catch( error => {
       return response.status(500).json({ error });
-    })
+    });
 });
 
 const checkPostBody = (reqParamArray, bodyObject) => {
@@ -72,7 +73,7 @@ const checkPostBody = (reqParamArray, bodyObject) => {
     }
   }
   return 'ok';
-}
+};
 
 app.post('/api/v1/projects', (request, response) => {
   const checkBodyResult = checkPostBody(['name'], request.body);
@@ -86,13 +87,13 @@ app.post('/api/v1/projects', (request, response) => {
         });
       })
       .catch( error => {
-        return response.status(500).json({ error })
+        return response.status(500).json({ error });
       });
   }
 });
 
 app.post('/api/v1/projects/:projectKey/palettes', (request, response) => {
-  const reqParams = ['name','color1','color2','color3','color4','color5'];
+  const reqParams = ['name', 'color1', 'color2', 'color3', 'color4', 'color5'];
   const checkBodyResult = checkPostBody(reqParams, request.body);
   if (checkBodyResult !== 'ok') {
     return response.status(422).json(checkBodyResult);
@@ -107,7 +108,7 @@ app.post('/api/v1/projects/:projectKey/palettes', (request, response) => {
       })
       .catch( error => {
         return response.status(500).json({ error });
-      })
+      });
   }
 });
 
@@ -123,13 +124,13 @@ app.delete('/api/v1/palettes/:paletteID', (request, response) => {
 
 app.delete('/api/v1/projects/:projectID', (request, response) => {
   database('palettes').where('project_key', request.params.projectID).del()
-  .then( () => {
-    database('projects').where('id', request.params.projectID).del()
     .then( () => {
-      return response.sendStatus(204);
+      database('projects').where('id', request.params.projectID).del()
+        .then( () => {
+          return response.sendStatus(204);
+        });
+    })
+    .catch( error => {
+      return response.status(500).json({ error });
     });
-  })
-  .catch( error => {
-    return response.status(500).json({ error });
-  });
 });
