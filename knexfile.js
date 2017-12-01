@@ -12,7 +12,7 @@ module.exports = {
       directory: './db/seeds/dev'
     },
     useNullAsDefault: true
-  }
+  },
 
   // staging: {
   //   client: 'postgresql',
