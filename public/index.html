@@ -6,48 +6,59 @@
     <link rel="stylesheet" href="/css/styles.css">
   </head>
   <body>
-    <header>
+    <section class="side-menu">
       <h1>Palette Picker</h1>
-      <button type="button" name="shuffle" id="shuffle-btn">Shuffle Colors</button>
-    </header>
-    <section id="color-box-container">
-      <div class="color-box color-1">Color 1</div>
-      <div class="color-box color-2">Color 2</div>
-      <div class="color-box color-3">Color 3</div>
-      <div class="color-box color-4">Color 4</div>
-      <div class="color-box color-5">Color 5</div>
-    </section>
-    <section id="side-menu">
       <article class="project-forms">
+        <h3>Select a Project</h3>
         <select class="project-dropdown">
           <option value="null">No Project Selected</option>
         </select>
-        <input
-        class="add-project-input"
-        type="text"
-        name="new-project"
-        placeholder="Enter new project name" />
-        <button
-        type="button"
-        name="submit-new-project"
-        class="add-project-btn">Add Project</button>
+        <h3>OR</h3>
+        <h3>Start a new project!</h3>
+        <form>
+          <input
+            class="add-project-input"
+            type="text"
+            name="new-project"
+            placeholder="Enter new project name" />
+          <button
+            type="button"
+            name="submit-new-project"
+            class="add-project-btn">Add Project</button>
+          </form>
       </article>
       <article class="palette-display">
+        <h2>Palettes</h2>
         <dl class="palette-list">
         </dl>
       </article>
-      <select class="palette-dropdown">
-        <option value="null">No Palette Selected</option>
-      </select>
-      <input
-        type="text"
-        class="new-palette"
-        placeholder="Enter a new Palette name" />
-      <button
-      type="button"
-      name="submit-new-palette"
-      class='submit-palette'>Add Palette</button>
     </section>
+    <main>
+      <section>
+        <h2 class="palette-header">Palette</h2>
+      </section>
+      <article id="color-box-container">
+        <div class="color-box color-1">Color 1</div>
+        <div class="color-box color-2">Color 2</div>
+        <div class="color-box color-3">Color 3</div>
+        <div class="color-box color-4">Color 4</div>
+        <div class="color-box color-5">Color 5</div>
+      </article>
+      <article class="palette-controls">
+        <button
+          type="button"
+          name="shuffle"
+          id="shuffle-btn">Shuffle Colors</button>
+        <input
+          type="text"
+          class="new-palette"
+          placeholder="Enter a new Palette name" />
+        <button
+          type="button"
+          name="submit-new-palette"
+          class='submit-palette'>Add Palette</button>
+      </article>
+    </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/colorHelpers.js"></script>
     <script type="text/javascript" src="/js/scripts.js"></script>

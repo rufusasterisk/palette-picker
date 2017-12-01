@@ -30,12 +30,12 @@ const updateColors = () => {
 };
 updateColors();
 
-const buildPostPayload = (bodyObject) => ({
+const buildFetchPayload = (bodyObject, method) => ({
   body: JSON.stringify(bodyObject),
   headers: {
     'Content-Type': 'application/json'
   },
-  method: 'POST'
+  method: method.toUpperCase()
 });
 
 const loadCurrentProjects = () => {
@@ -56,7 +56,7 @@ const loadCurrentProjects = () => {
 
 const addProject = () => {
   const projectName = $('.add-project-input').val();
-  const projectPayload = buildPostPayload({ name: projectName });
+  const projectPayload = buildFetchPayload({ name: projectName }, 'post');
   fetch('/api/v1/projects', projectPayload)
     .then( response => response.json())
     .then( () => {
@@ -67,6 +67,9 @@ const addProject = () => {
 
 const loadSelectedPalette = () => {
   let target = $( event.target );
+  if (target.is('button')) {
+    return;
+  }
   if (target.is('div')) {
     target = $( event.target.parentElement );
   }
@@ -86,7 +89,8 @@ const displayPalettes = (paletteArray) => {
   $('.palette-list').html('');
   paletteArray.forEach( (palette) => {
     $('.palette-list').prepend(`
-      <dt class="palette-id-${palette.id}">${palette.name}</dt>
+      <dt class="palette-id-${palette.id}">
+        ${palette.name} <button>X</button></dt>
       <dd class="palette-id-${palette.id}">
         <div style="background-color:#${palette.color1}"></div>
         <div style="background-color:#${palette.color2}"></div>
@@ -96,7 +100,6 @@ const displayPalettes = (paletteArray) => {
     `);
   });
 };
-
 
 const selectProject = () => {
   const currentProject = $('.project-dropdown').val();
@@ -111,7 +114,6 @@ const selectProject = () => {
       });
   }
 };
-
 
 const addPalette = () => {
   const name = $('.new-palette').val();
@@ -138,7 +140,7 @@ const addPalette = () => {
     color5: color5,
   };
   fetch('/api/v1/projects/' + projectID + '/palettes',
-    buildPostPayload(myPayload)
+    buildFetchPayload(myPayload, 'post')
   )
     .then(response => response.json())
     .then( () => {
@@ -154,6 +156,19 @@ const shuffleColors = () => {
   updateColors();
 };
 
+const deletePalette = () => {
+  let target = $( event.target.parentElement);
+  const currentPalette = target.attr('class').substr(11);
+  fetch('/api/v1/palettes/' + currentPalette, buildFetchPayload({}, 'delete'))
+    .then( () => {
+      $(`.palette-id-${currentPalette}`).remove();
+    })
+    .catch( error => {
+      //eslint-disable-next-line no-console
+      console.log( { error });
+    });
+};
+
 loadCurrentProjects();
 
 $('#shuffle-btn').on('click', shuffleColors);
@@ -162,9 +177,9 @@ $('.add-project-btn').on('click', addProject);
 
 $('.project-dropdown').on('change', selectProject);
 
-$('.palette-dropdown').on('change', loadSelectedPalette);
-
 $('.submit-palette').on('click', addPalette);
 
 $('.palette-list').on('click', 'dt', loadSelectedPalette);
 $('.palette-list').on('click', 'dd', loadSelectedPalette);
+
+$('.palette-list').on('click', 'button', deletePalette);
