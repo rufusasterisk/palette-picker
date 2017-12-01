@@ -6,6 +6,8 @@ let displayColors = {
   5: { hue: 240, saturation: 100, lightness: 50},
 };
 
+const hostPort = 3002;
+
 const setFontColor = (index) => {
   if (displayColors[index].lightness < 41) {
     $(`.color-${index}`).css({'color':'HSL(0,100%,100%)'})
@@ -60,4 +62,80 @@ const pickRandomColor = () => {
   return ({ hue: hue, saturation: saturation, lightness: lightness})
 }
 
+const buildPostPayload = (bodyObject) => ({
+  body: JSON.stringify(bodyObject),
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  method: 'POST'
+})
+
+const loadCurrentProjects = () => {
+  fetch('/api/v1/projects')
+    .then( response => response.json())
+    .then( projectArray => {
+      if (projectArray.length) {
+        $('.project-dropdown').html(`
+        <option value="null">No Project Selected</option>`);
+        projectArray.forEach( (project) => {
+          $('.project-dropdown').prepend(`
+            <option value="${project.id}">${project.name}</option>
+            `);
+          })
+      }
+    })
+}
+
+const addProject = () => {
+  const projectName = $('.add-project-input').val();
+  const payload = buildPostPayload({ name: projectName })
+  fetch('/api/v1/projects', payload)
+    .then( response => response.json())
+    .then( data => {
+      console.log(data);
+    })
+}
+
+const loadSelectedPalette = () => {
+  const currentPalette = $('.palette-dropdown').val();
+  console.log(currentPalette);
+  fetch('/api/v1/palettes/' + currentPalette)
+    .then( response => response.json())
+    .then( palette => {
+
+    })
+}
+
+
+const selectProject = () => {
+  const currentProject = $('.project-dropdown').val()
+  if(currentProject !== null) {
+    fetch('/api/v1/projects/' + currentProject + '/palettes')
+      .then( response => response.json())
+      .then( paletteArray => {
+        if (paletteArray.length){
+          $('.palette-dropdown').html('');
+          paletteArray.forEach( (palette) => {
+            $('.palette-dropdown').append(`
+              <option value="${palette.id}">${palette.name}</option>
+            `)
+          })
+        } else {
+          $('.palette-dropdown').html(`
+            <option value="null">No Palette Selected</option>
+          `)
+        }
+      })
+      .catch( error => {
+        console.log({ error });
+      })
+  }
+}
+
+loadCurrentProjects();
+
 $('#shuffle-btn').on('click', tetraColors);
+
+$('.add-project-btn').on('click', addProject);
+
+$('.project-dropdown').on('change', selectProject);
