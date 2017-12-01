@@ -1,11 +1,14 @@
-/** {
-  border: solid 1px black
-}*/
+* {
+  /*border: solid 1px black;*/
+  margin: 0;
+  padding: 0;
+}
 
 body {
   position: absolute;
   min-height: 98%;
   min-width: 98%;
+  display: flex;
 }
 
 #color-box-container {
@@ -13,6 +16,47 @@ body {
   border: solid 1px black;
   min-height: 30%;
   height: 200px;
+}
+
+.side-menu {
+  display: inline-block;
+  min-height: 100vh;
+  min-width: 20%;
+}
+
+.project-forms {
+  height: 30%;
+}
+
+.palette-display {
+  height: 70%;
+  border-top: solid 1px black;
+}
+
+main {
+  display: inline-block;
+  min-height: 100vh;
+  min-width: 80%;
+}
+
+select {
+  font-size: 24px;
+}
+
+.add-project-input {
+  font-size: 24px;
+  display: block;
+  width: 80%;
+}
+
+.add-project-btn {
+  font-size: 24px;
+
+  display: block;
+}
+
+.palette-header {
+  text-align: center;
 }
 
 .color-box {
