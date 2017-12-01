@@ -102,14 +102,20 @@ const convertHSLtoHex = (HSLColorObject) => {
  const percentHue = hue/360;
 
  //temp values must be between 0 and 1
- let tempR = (percentHue + 0.333) % 1;
+ let tempR = (percentHue + 0.333);
  let tempG = percentHue;
- let tempB = (percentHue - 0.333) % 1;
+ let tempB = (percentHue - 0.333);
  if (tempR < 0){
    tempR++;
  }
+ if (tempR > 1){
+   tempR--;
+ }
  if (tempB < 0){
    tempB++;
+ }
+ if (tempB > 1){
+   tempB--;
  }
 
  const finalR = Math.round(colorTests(tempR, temp1, temp2)*255);

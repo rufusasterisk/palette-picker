@@ -98,8 +98,11 @@ const addProject = () => {
 }
 
 const loadSelectedPalette = () => {
-  const currentPalette = $('.palette-dropdown').val();
-  if(currentPalette !== 'null') {
+  let target = $( event.target );
+  if (target.is('div')) {
+    target = $( event.target.parentElement );
+  }
+  const currentPalette = target.attr('class').substr(11);
     fetch('/api/v1/palettes/' + currentPalette)
     .then( response => response.json())
     .then( palette => {
@@ -109,7 +112,22 @@ const loadSelectedPalette = () => {
       $('.color-4').css('background-color', `#${palette[0].color4}`)
       $('.color-5').css('background-color', `#${palette[0].color5}`)
     })
-  }
+  // }
+}
+
+const displayPalettes = (paletteArray) => {
+  $('.palette-list').html('');
+  paletteArray.forEach( (palette) => {
+    $('.palette-list').prepend(`
+      <dt class="palette-id-${palette.id}">${palette.name}</dt>
+      <dd class="palette-id-${palette.id}">
+        <div style="background-color:#${palette.color1}"></div>
+        <div style="background-color:#${palette.color2}"></div>
+        <div style="background-color:#${palette.color3}"></div>
+        <div style="background-color:#${palette.color4}"></div>
+        <div style="background-color:#${palette.color5}"></div>
+    `)
+  });
 }
 
 
@@ -119,21 +137,7 @@ const selectProject = () => {
     fetch('/api/v1/projects/' + currentProject + '/palettes')
       .then( response => response.json())
       .then( paletteArray => {
-        if (paletteArray.length){
-          $('.palette-dropdown').html(`
-            <option value="null">No Palette Selected</option>
-            `);
-          paletteArray.forEach( (palette) => {
-            $('.palette-dropdown').append(`
-              <option value="${palette.id}">${palette.name}</option>
-            `)
-          })
-        } else {
-          $('.palette-dropdown').html(`
-            <option value="null">No Palette Selected</option>
-          `)
-        }
-        loadSelectedPalette();
+        displayPalettes(paletteArray);
       })
       .catch( error => {
         console.log({ error });
@@ -194,3 +198,6 @@ $('.project-dropdown').on('change', selectProject);
 $('.palette-dropdown').on('change', loadSelectedPalette);
 
 $('.submit-palette').on('click', addPalette);
+
+$('.palette-list').on('click', 'dt', loadSelectedPalette);
+$('.palette-list').on('click', 'dd', loadSelectedPalette);
