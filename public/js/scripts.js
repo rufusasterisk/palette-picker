@@ -159,7 +159,13 @@ const addPalette = () => {
 };
 
 const shuffleColors = () => {
-  displayColors = tetraColors();
+  let newColorPalette = tetraColors();
+  for (let i = 1; i < 6; i++) {
+    if ($(`.color-${i}`).hasClass('locked')) {
+      Object.assign(newColorPalette, { [i]: displayColors[i]});
+    }
+  }
+  displayColors = newColorPalette;
   updateColors();
 };
 
@@ -175,8 +181,13 @@ const deletePalette = () => {
       console.log( { error });
     });
 };
-
 loadCurrentProjects();
+
+const toggleColorLock = () => {
+  $( event.target ).toggleClass('locked');
+};
+
+$('#color-box-container').on('click', 'div', toggleColorLock);
 
 $('#shuffle-btn').on('click', shuffleColors);
 
