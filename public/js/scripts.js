@@ -41,7 +41,7 @@ const buildFetchPayload = (bodyObject, method) => ({
   method: method.toUpperCase()
 });
 
-const loadCurrentProjects = () => {
+const loadCurrentProjects = (selectedProject) => {
   fetch('/api/v1/projects')
     .then( response => response.json())
     .then( projectArray => {
@@ -49,11 +49,17 @@ const loadCurrentProjects = () => {
         $('.project-dropdown').html(`
         <option value="null">No Project Selected</option>`);
         projectArray.forEach( (project) => {
-          $('.project-dropdown').prepend(`
+          $('.project-dropdown').append(`
             <option value="${project.id}">${project.name}</option>
             `);
         });
       }
+      if (selectedProject) {
+        $('.project-dropdown').val(selectedProject);
+      } else {
+        $('.project-dropdown').val('null');
+      }
+      selectProject();
     });
 };
 
@@ -62,8 +68,9 @@ const addProject = () => {
   const projectPayload = buildFetchPayload({ name: projectName }, 'post');
   fetch('/api/v1/projects', projectPayload)
     .then( response => response.json())
-    .then( () => {
-      loadCurrentProjects();
+    .then( (idObject) => {
+      $('.add-project-input').val('');
+      loadCurrentProjects(idObject.id);
     });
 };
 
@@ -108,17 +115,18 @@ const displayPalettes = (paletteArray) => {
 
 const selectProject = () => {
   const currentProject = $('.project-dropdown').val();
-  if (currentProject !== null) {
-    fetch('/api/v1/projects/' + currentProject + '/palettes')
-      .then( response => response.json())
-      .then( paletteArray => {
-        displayPalettes(paletteArray);
-      })
-      .catch( error => {
-        // eslint-disable-next-line no-console
-        console.log({ error });
-      });
-  }
+  const targetURL = currentProject !== 'null' ?
+    '/api/v1/projects/' + currentProject + '/palettes' :
+    '/api/v1/palettes/';
+  fetch(targetURL)
+    .then( response => response.json())
+    .then( paletteArray => {
+      displayPalettes(paletteArray);
+    })
+    .catch( error => {
+      // eslint-disable-next-line no-console
+      console.log({ error });
+    });
 };
 
 const addPalette = () => {
