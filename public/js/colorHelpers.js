@@ -34,6 +34,19 @@ const tetraColors = () => {
   return tetraColorPalette;
 };
 
+const convertRGBtoHex = (objectRGB) => {
+  // {red: ###, green: ###, blue: ###}
+  // eslint-disable-next-line max-len
+  return (`${convertToHex(objectRGB.red)}${convertToHex(objectRGB.green)}${convertToHex(objectRGB.blue)}`);
+};
+
+const convertHextoRGB = (hexString) => {
+  const red = convertToDec(hexString.substr(0, 2));
+  const green = convertToDec(hexString.substr(2, 2));
+  const blue = convertToDec(hexString.substr(4, 2));
+  return ({ red, green, blue});
+};
+
 const convertHextoHSL = (hexString) => {
   const tempR = convertToDec(hexString.substr(0, 2)) / 255;
   const tempG = convertToDec(hexString.substr(2, 2)) / 255;
