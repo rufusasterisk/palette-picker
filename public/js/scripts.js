@@ -41,7 +41,7 @@ const buildFetchPayload = (bodyObject, method) => ({
   method: method.toUpperCase()
 });
 
-const loadCurrentProjects = () => {
+const loadCurrentProjects = (selectedProject) => {
   fetch('/api/v1/projects')
     .then( response => response.json())
     .then( projectArray => {
@@ -49,22 +49,35 @@ const loadCurrentProjects = () => {
         $('.project-dropdown').html(`
         <option value="null">No Project Selected</option>`);
         projectArray.forEach( (project) => {
-          $('.project-dropdown').prepend(`
+          $('.project-dropdown').append(`
             <option value="${project.id}">${project.name}</option>
             `);
         });
       }
+      if (selectedProject) {
+        $('.project-dropdown').val(selectedProject);
+      } else {
+        $('.project-dropdown').val('null');
+      }
+      selectProject();
     });
 };
 
 const addProject = () => {
   const projectName = $('.add-project-input').val();
-  const projectPayload = buildFetchPayload({ name: projectName }, 'post');
-  fetch('/api/v1/projects', projectPayload)
-    .then( response => response.json())
-    .then( () => {
-      loadCurrentProjects();
-    });
+  if (classTextIsUnique(projectName, 'option')) {
+    const projectPayload = buildFetchPayload({ name: projectName }, 'post');
+    fetch('/api/v1/projects', projectPayload)
+      .then( response => response.json())
+      .then( (idObject) => {
+        $('.add-project-input').val('');
+        loadCurrentProjects(idObject.id);
+      })
+      //eslint-disable-next-line no-console
+      .catch( error => console.log({error}));
+  } else {
+    alert('Project Names must be unique!');
+  }
 };
 
 const loadSelectedPalette = () => {
@@ -94,8 +107,8 @@ const displayPalettes = (paletteArray) => {
   $('.palette-list').html('');
   paletteArray.forEach( (palette) => {
     $('.palette-list').prepend(`
-      <dt class="palette-id-${palette.id}">
-        ${palette.name} <button>X</button></dt>
+      <dt
+        class="palette-id-${palette.id}">${palette.name} <button>X</button></dt>
       <dd class="palette-id-${palette.id}">
         <div style="background-color:#${palette.color1}"></div>
         <div style="background-color:#${palette.color2}"></div>
@@ -108,17 +121,18 @@ const displayPalettes = (paletteArray) => {
 
 const selectProject = () => {
   const currentProject = $('.project-dropdown').val();
-  if (currentProject !== null) {
-    fetch('/api/v1/projects/' + currentProject + '/palettes')
-      .then( response => response.json())
-      .then( paletteArray => {
-        displayPalettes(paletteArray);
-      })
-      .catch( error => {
-        // eslint-disable-next-line no-console
-        console.log({ error });
-      });
-  }
+  const targetURL = currentProject !== 'null' ?
+    '/api/v1/projects/' + currentProject + '/palettes' :
+    '/api/v1/palettes/';
+  fetch(targetURL)
+    .then( response => response.json())
+    .then( paletteArray => {
+      displayPalettes(paletteArray);
+    })
+    .catch( error => {
+      // eslint-disable-next-line no-console
+      console.log({ error });
+    });
 };
 
 const addPalette = () => {
@@ -159,7 +173,13 @@ const addPalette = () => {
 };
 
 const shuffleColors = () => {
-  displayColors = tetraColors();
+  let newColorPalette = tetraColors();
+  for (let i = 1; i < 6; i++) {
+    if ($(`.color-${i}`).hasClass('locked')) {
+      Object.assign(newColorPalette, { [i]: displayColors[i]});
+    }
+  }
+  displayColors = newColorPalette;
   updateColors();
 };
 
@@ -175,8 +195,22 @@ const deletePalette = () => {
       console.log( { error });
     });
 };
-
 loadCurrentProjects();
+
+const toggleColorLock = () => {
+  $( event.target ).toggleClass('locked');
+};
+
+const classTextIsUnique = (newName, classSelector) => {
+  const upperNewName = newName.toUpperCase();
+  let result = true;
+  $(classSelector).each(function(){
+    result = ($(this).text()).toUpperCase() !== upperNewName && result;
+  });
+  return result;
+};
+
+$('#color-box-container').on('click', 'div', toggleColorLock);
 
 $('#shuffle-btn').on('click', shuffleColors);
 
