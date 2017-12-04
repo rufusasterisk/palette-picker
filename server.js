@@ -58,7 +58,7 @@ app.get('/api/v1/palettes/:id', (request, response) => {
 });
 
 const checkPostBody = (reqParamArray, bodyObject) => {
-  for (let requiredParameter of reqParamArray) {
+  for (var requiredParameter of reqParamArray) {
     if (!bodyObject[requiredParameter]){
       return {
         error: `You are missing the ${requiredParameter} parameter!`
