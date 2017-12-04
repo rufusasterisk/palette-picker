@@ -65,13 +65,19 @@ const loadCurrentProjects = (selectedProject) => {
 
 const addProject = () => {
   const projectName = $('.add-project-input').val();
-  const projectPayload = buildFetchPayload({ name: projectName }, 'post');
-  fetch('/api/v1/projects', projectPayload)
-    .then( response => response.json())
-    .then( (idObject) => {
-      $('.add-project-input').val('');
-      loadCurrentProjects(idObject.id);
-    });
+  if (classTextIsUnique(projectName, 'option')) {
+    const projectPayload = buildFetchPayload({ name: projectName }, 'post');
+    fetch('/api/v1/projects', projectPayload)
+      .then( response => response.json())
+      .then( (idObject) => {
+        $('.add-project-input').val('');
+        loadCurrentProjects(idObject.id);
+      })
+      //eslint-disable-next-line no-console
+      .catch( error => console.log({error}));
+  } else {
+    alert('Project Names must be unique!');
+  }
 };
 
 const loadSelectedPalette = () => {
@@ -101,8 +107,8 @@ const displayPalettes = (paletteArray) => {
   $('.palette-list').html('');
   paletteArray.forEach( (palette) => {
     $('.palette-list').prepend(`
-      <dt class="palette-id-${palette.id}">
-        ${palette.name} <button>X</button></dt>
+      <dt
+        class="palette-id-${palette.id}">${palette.name} <button>X</button></dt>
       <dd class="palette-id-${palette.id}">
         <div style="background-color:#${palette.color1}"></div>
         <div style="background-color:#${palette.color2}"></div>
@@ -193,6 +199,15 @@ loadCurrentProjects();
 
 const toggleColorLock = () => {
   $( event.target ).toggleClass('locked');
+};
+
+const classTextIsUnique = (newName, classSelector) => {
+  const upperNewName = newName.toUpperCase();
+  let result = true;
+  $(classSelector).each(function(){
+    result = ($(this).text()).toUpperCase() !== upperNewName && result;
+  });
+  return result;
 };
 
 $('#color-box-container').on('click', 'div', toggleColorLock);
