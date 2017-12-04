@@ -2,12 +2,17 @@
   /*border: solid 1px black;*/
   margin: 0;
   padding: 0;
+  font-family: 'Raleway', sans-serif;
+}
+
+html {
+  height: 100%;
 }
 
 body {
-  position: absolute;
-  min-height: 98%;
-  min-width: 98%;
+  /*position: absolute;*/
+  height: 100%;
+  min-width: 100%;
   display: flex;
 }
 
@@ -20,22 +25,75 @@ body {
 
 .side-menu {
   display: inline-block;
-  min-height: 100vh;
+  min-height: 100%;
   min-width: 20%;
+  background-color: #abcdef;
+  box-shadow: 1px 0px 2px;
+}
+
+.side-menu article {
+  background-color: #abcdef;
+
 }
 
 .project-forms {
   height: 30%;
 }
 
+.project-forms h2 {
+  padding-bottom: 10px;
+}
+
+.project-forms h3 {
+  text-align: center;
+}
+
+.project-dropdown {
+  margin: auto;
+  display: block;
+}
+
+.add-project-input {
+  font-size: 24px;
+  display: block;
+  width: 90%;
+  margin: auto;
+
+}
+
+.palette-controls button {
+  font-size: 24px;
+}
+
+.add-project-btn {
+  font-size: 24px;
+  display: block;
+  width: 90%;
+  margin: auto;
+}
+
 .palette-display {
   height: 70%;
-  border-top: solid 1px black;
+  /*padding-top: 10px;*/
+  /*box-shadow: inset 0px 1px 1px black;*/
+}
+
+.side-menu h2 {
+  font-size: 32px;
+}
+
+.side-menu h3 {
+  font-size: 28px;
+}
+
+.locked {
+  transition: box-shadow 0.2s;
+  box-shadow: inset 0px 0px 10px 5px black;
 }
 
 main {
   display: inline-block;
-  min-height: 100vh;
+  height: 100%;
   min-width: 80%;
 }
 
@@ -43,25 +101,25 @@ select {
   font-size: 24px;
 }
 
-.add-project-input {
-  font-size: 24px;
-  display: block;
-  width: 80%;
-}
-
-.add-project-btn {
-  font-size: 24px;
-
-  display: block;
-}
-
 .palette-header {
   text-align: center;
 }
 
 .color-box {
+  transition: box-shadow 0.2s;
   min-width: 20%;
   position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.color-box h4 {
+  font-size: 16px;
+  font-family: monospace;
+  margin-bottom: 20px;
+  color: white;
+  text-shadow: 0px 0px 5px black;
 }
 
 .color-1 {
@@ -84,8 +142,58 @@ select {
   background-color: #ff0;
 }
 
+.palette-container {
+  height: 94%;
+  overflow-y: auto;
+}
+
+dt {
+  font-size: 24px;
+  position: relative;
+  box-shadow: inset 0px 1px 1px;
+  padding-top: 5px;
+  padding-left: 10px;
+}
+
+dt button {
+  padding: 0px 2px 0px 2px;
+  height: 28px;
+  vertical-align: middle;
+  margin-bottom: 2px;
+  position: absolute;
+  right: 10px;
+}
+
+dt button:hover {
+  cursor: pointer;
+  background-color: red;
+  color: fff;
+}
+
+dd {
+  box-shadow: inset 0px -1px 1px;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 5px;
+}
+
 dd div {
   width: 50px;
   height: 50px;
   display: inline-block;
+}
+
+.palette-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.palette-controls form {
+  padding: 10px 10px 10px 10px;
+  /*text-align: right;*/
+}
+
+.palette-controls input {
+  font-size: 24px;
+  width: 300px;
 }

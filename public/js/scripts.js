@@ -108,7 +108,7 @@ const displayPalettes = (paletteArray) => {
   paletteArray.forEach( (palette) => {
     $('.palette-list').prepend(`
       <dt
-        class="palette-id-${palette.id}">${palette.name} <button>X</button></dt>
+        class="palette-id-${palette.id}">${palette.name} <button>Delete</button></dt>
       <dd class="palette-id-${palette.id}">
         <div style="background-color:#${palette.color1}"></div>
         <div style="background-color:#${palette.color2}"></div>
@@ -198,7 +198,11 @@ const deletePalette = () => {
 loadCurrentProjects();
 
 const toggleColorLock = () => {
-  $( event.target ).toggleClass('locked');
+  if (!$(event.target).is('h4')){
+    $( event.target ).toggleClass('locked');
+  } else {
+    // $( event.target.parentElement ).toggleClass('locked');
+  }
 };
 
 const classTextIsUnique = (newName, classSelector) => {

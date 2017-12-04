@@ -2,13 +2,16 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Palette Picker</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
   </head>
   <body>
     <section class="side-menu">
-      <h1>Palette Picker</h1>
+      <!-- <h1>Palette Picker</h1> -->
       <article class="project-forms">
+        <h2>Projects</h2>
         <h3>Select a Project</h3>
         <select class="project-dropdown">
           <option value="null">No Project Selected</option>
@@ -29,8 +32,10 @@
       </article>
       <article class="palette-display">
         <h2>Palettes</h2>
-        <dl class="palette-list">
-        </dl>
+        <div class="palette-container">
+          <dl class="palette-list">
+          </dl>
+        </div>
       </article>
     </section>
     <main>
@@ -55,18 +60,20 @@
         </div>
       </article>
       <article class="palette-controls">
-        <button
-          type="button"
-          name="shuffle"
-          id="shuffle-btn">Shuffle Colors</button>
-        <input
-          type="text"
-          class="new-palette"
-          placeholder="Enter a new Palette name" />
-        <button
-          type="button"
-          name="submit-new-palette"
-          class='submit-palette'>Add Palette</button>
+        <form>
+          <button
+            type="button"
+            name="shuffle"
+            id="shuffle-btn">Shuffle Colors</button>
+          <input
+            type="text"
+            class="new-palette"
+            placeholder="Enter a new Palette name" />
+          <button
+            type="button"
+            name="submit-new-palette"
+            class='submit-palette'>Add Palette</button>
+        </form
       </article>
     </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
