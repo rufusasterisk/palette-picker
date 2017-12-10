@@ -14,7 +14,7 @@ const randomColors = () => {
   return randomColorPalette;
 };
 
-const tetraColors = () => {
+export const tetraColors = () => {
   const starterColor = pickRandomColor();
   const firstTetra = Object.assign({}, pickRandomColor(),
     { hue: ( starterColor.hue + 180 )%360 });
@@ -96,7 +96,7 @@ const colorTests = (color, temp1, temp2) => {
   }
 };
 
-const convertHSLtoHex = (HSLColorObject) => {
+export const convertHSLtoHex = (HSLColorObject) => {
   //HSLColorObject = {hue: value, saturation: value, lightness: value}
   let { hue, saturation, lightness } = HSLColorObject;
   saturation = saturation/100;
@@ -140,7 +140,7 @@ const convertHSLtoHex = (HSLColorObject) => {
   return (convertToHex(finalR)+convertToHex(finalG)+convertToHex(finalB));
 };
 
-const parseRGB = (rgbString) => {
+export const parseRGB = (rgbString) => {
   rgbString = rgbString.replace(/^.*\(/, '');
   rgbString = rgbString.replace(')', '');
   let rgbArray = JSON.parse("[" + rgbString + "]");

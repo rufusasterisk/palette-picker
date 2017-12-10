@@ -13,3 +13,18 @@ this.addEventListener('install', event => {
     })
   );
 });
+
+this.addEventListener('activate', (event) => {
+  let cacheWhitelist = ['assets-v1'];
+
+  event.waitUntil(
+    caches.keys().then(keyList => {
+      return Promise.all(keyList.map(key => {
+        if (cacheWhitelist.indexOf(key) === -1) {
+          return caches.delete(key);
+        }
+      }));
+    })
+    .then(() => clients.claim())
+  );
+});

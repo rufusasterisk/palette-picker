@@ -1,32 +1,36 @@
-// const { Dexie } = require('dexie');
+import Dexie from 'dexie';
 
 let db = new Dexie('palettePicker');
 
 db.version(1).stores({
   projects: 'id, name',
-  palettes: 'id, name, color1, color2, color3, color4, color 5, project_key'
+  palettes: 'id, name, color1, color2, color3, color4, color5, project_key'
 });
 
-const saveOfflineProjects = (project) => {
-  return db.projects.add(project);
+console.log(db);
+
+export const saveOfflineProjects = (project) => {
+  return db.projects.put(project);
 };
 
-const saveOfflinePalettes = (palette) => {
-  return db.palettes.add(palette);
+export const saveOfflinePalettes = (palette) => {
+  return db.palettes.put(palette);
 };
 
-const getOfflineSinglePalette = (id) => {
+export const getOfflineSinglePalette = (id) => {
   return db.palettes.get(parseInt(id));
 };
 
-const getOfflineProjectPalettes = (projectID) => {
-  return db.palettes.where('project_key').equals(projectID).toArray();
+// export const getOfflineProjects
+
+export const getOfflineProjectPalettes = () => {
+  return db.palettes.toArray();
 };
 
-const loadOfflineMarkdowns = () => {
+export const loadOfflineMarkdowns = () => {
   return db.markdownFiles.toArray();
 };
 
-const setPendingMarkdownsToSynced = () => {
+export const setPendingMarkdownsToSynced = () => {
   return db.markdownFiles.where('status').equals('pendingSync').modify({status: 'synced'});
 };
