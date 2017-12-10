@@ -398,3 +398,25 @@ $('.palette-list').on('click', 'dt', loadSelectedPalette);
 $('.palette-list').on('click', 'dd', loadSelectedPalette);
 
 $('.palette-list').on('click', 'button', deletePalette);
+
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+
+    // Load markdowns from indexedDB
+    // loadOfflineMarkdowns()
+    //   .then(markdowns => appendMarkdowns(markdowns))
+    //   .catch(error => console.log(`Error loading markdowns: ${error}`));
+
+    // Register a new service worker
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(() => navigator.serviceWorker.ready)
+      .then(() => {
+        Notification.requestPermission();
+        console.log('ServiceWorker registration successful');
+      }).catch(error => {
+        console.log(`ServiceWorker registration failed: ${error}`);
+      });
+
+  });
+}
