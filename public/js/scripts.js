@@ -12,7 +12,7 @@ import {
   parseRGB
 } from './colorHelpers.js';
 
-console.log(saveOfflineProjects);
+// console.log(saveOfflineProjects);
 
 let displayColors = {
   1: { hue: 0, saturation: 100, lightness: 50},

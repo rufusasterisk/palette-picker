@@ -7,7 +7,7 @@ db.version(1).stores({
   palettes: 'id, name, color1, color2, color3, color4, color5, project_key'
 });
 
-console.log(db);
+// console.log(db);
 
 export const saveOfflineProjects = (project) => {
   return db.projects.put(project);
